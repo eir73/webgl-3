@@ -38,6 +38,23 @@
 
 			animate();
 
+      function animate() {
+				requestAnimationFrame( animate );
+				controls.update();
+        i++
+        //j++
+        console.log(earth)
+        console.log(mars)
+        i = i % 3600
+				stats.update();
+				camera = cameraState ? cameraState : perspectiveCamera;
+        earth.rotation.y = i * 0.01
+        earthTrace.rotation.y = i * 0.01
+        mars.rotation.y = i * 0.01
+        /*jupiter.rotation.y = i * 0.01*/
+				renderer.render( scene, camera );
+			}
+
 			function init() {
 				var aspect = window.innerWidth / window.innerHeight;
 				perspectiveCamera = new THREE.PerspectiveCamera( 60, aspect, 1, 10000 );
@@ -62,7 +79,7 @@
         const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture })
         const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture })
 
-        function createPlanet(texture, r, x,y,z) {
+       /* function createPlanet(texture, r, x,y,z) {
           var sphereGeometry = new THREE.SphereBufferGeometry(r, 60, 40);
           var group = new THREE.Group()
           var sphereMaterial = new THREE.MeshStandardMaterial( { map: texture } );
@@ -78,10 +95,35 @@
           return [sphere, group]
         }
 
-        //[jupiter, jupiterTrace] = createPlanet(jupiterTexture, 50, 650, 50, 650)
         [earth, earthTrace] = createPlanet(earthTexture, 15, 550, -10, 50)
-        //[marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)
         [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
+        [jupiter, jupiterTrace] = createPlanet(jupiterTexture, 50, 650, 50, 650)
+        [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)*/
+
+        var sphereGeometry = new THREE.SphereBufferGeometry(15, 60, 40);
+          var group = new THREE.Group()
+          var sphereMaterial = new THREE.MeshStandardMaterial( { map: earthTexture } );
+          var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+          sphere.position.x = x;
+          sphere.position.y = y;
+          sphere.position.z = z;
+          sphere.updateMatrix();
+          sphere.matrixAutoUpdate = true
+          group.add(sphere)
+          scene.add(group)
+
+         sphereGeometry = new THREE.SphereBufferGeometry(10, 60, 40);
+         group = new THREE.Group()
+         sphereMaterial = new THREE.MeshStandardMaterial( { map: marsTexture } );
+         sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+          sphere.position.x = x;
+          sphere.position.y = y;
+          sphere.position.z = z;
+          sphere.updateMatrix();
+          sphere.matrixAutoUpdate = true
+          group.add(sphere)
+          scene.add(group)
+
 
 				var light = new THREE.AmbientLight( 0x666666 );
 				scene.add( light );
@@ -143,22 +185,7 @@
       var i = 0
       var j = 0
 
-			function animate() {
-				requestAnimationFrame( animate );
-				controls.update();
-        i++
-        //j++
-
-        i = i % 3600
-				stats.update();
-				camera = cameraState ? cameraState : perspectiveCamera;
-        earth.rotation.y = i * 0.01
-        earthTrace.rotation.y = i * 0.01
-        //mars.rotation.y = i * 0.01
-        /*jupiter.rotation.y = i * 0.01*/
-        console.log(earth)
-				renderer.render( scene, camera );
-			}
+			
 
 			document.onkeypress = e => {
 				let changed = false
