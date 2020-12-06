@@ -60,7 +60,7 @@
         const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture})
         const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture })
         const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture })
-       /* function createPlanet(texture, r, x,y,z) {
+        function createMyPlanet(texture, r, x,y,z) {
           id++
           let sphereGeometry = new THREE.SphereBufferGeometry(r, 60, 40);
           let group = new THREE.Group({name: id})
@@ -76,7 +76,17 @@
           scene.add(group)
 
           return [sphere, group]
-        }*/
+        }
+
+
+        let geometry = new THREE.SphereBufferGeometry(1, 60, 40);
+
+        function createPlanet(scene, mesh, group, x, scale) {
+          mesh.position.set(x, 0, 0);
+          mesh.scale.setScalar(scale);
+          group.add(mesh);
+          scene.add(group);
+        }
 
         const earthGroup = new THREE.Group();
         const earthMesh = new THREE.Mesh(geometry, earthMaterial);
@@ -91,12 +101,7 @@
         createPlanet(scene, jupiterMesh, jupiterGroup, 42, 3.5);
 
 
-        function createPlanet(scene, mesh, group, x, scale) {
-          mesh.position.set(x, 0, 0);
-          mesh.scale.setScalar(scale);
-          group.add(mesh);
-          scene.add(group);
-        }
+        
 
        /* [earth, earthTracee] = createPlanet(earthTexture, 15, 550, -10, 50)
         [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
