@@ -30,10 +30,16 @@
       var earthTracee;
       var jupiterTrace
       var marsTrace;
+
+      var earthGroup
+      var earthMesh 
+      var marsGroup
+      var marsMesh
+      var jupiterGroup
+      var jupiterMesh 
+      var sunGroup
+      var sunMesh
 	
-
-		
-
 			init();
 
       animate();
@@ -48,8 +54,8 @@
 				var texture = new THREE.TextureLoader().load( './textures/bg.jpg' );
 				scene.background = texture
 
-				var gridHelper = new THREE.GridHelper( 10000, 50 );
-				scene.add( gridHelper )
+			
+			
 
         const earthTexture = new THREE.TextureLoader().load( './textures/earth.jpg' );
         const marsTexture = new THREE.TextureLoader().load( './textures/mars.jpg' );
@@ -79,7 +85,7 @@
         }
 
 
-        let geometry = new THREE.SphereBufferGeometry(1, 60, 40);
+        let geometry = new THREE.SphereBufferGeometry(1, 32, 16);
 
         function createPlanet(scene, mesh, group, x, scale) {
           mesh.position.set(x, 0, 0);
@@ -88,20 +94,23 @@
           scene.add(group);
         }
 
-        const earthGroup = new THREE.Group();
-        const earthMesh = new THREE.Mesh(geometry, earthMaterial);
-        createPlanet(scene, earthMesh, earthGroup, 31, 1);
+        earthGroup = new THREE.Group();
+        earthMesh = new THREE.Mesh(geometry, earthMaterial);
+        createPlanet(scene, earthMesh, earthGroup, 550, 10);
 
-        const marsGroup = new THREE.Group();
-        const marsMesh = new THREE.Mesh(geometry, marsMaterial);
-        createPlanet(scene, marsMesh, marsGroup, 34, 0.8);
+        marsGroup = new THREE.Group();
+        marsMesh = new THREE.Mesh(geometry, marsMaterial);
+        createPlanet(scene, marsMesh, marsGroup, 400, 15);
 
-        const jupiterGroup = new THREE.Group();
-        const jupiterMesh = new THREE.Mesh(geometry, jupiterMaterial);
-        createPlanet(scene, jupiterMesh, jupiterGroup, 42, 3.5);
+        jupiterGroup = new THREE.Group();
+        jupiterMesh = new THREE.Mesh(geometry, jupiterMaterial);
+        createPlanet(scene, jupiterMesh, jupiterGroup, 1000, 50);
+
+        sunGroup = new THREE.Group();
+        sunMesh = new THREE.Mesh(geometry, sunMaterial);
+        createPlanet(scene, sunMesh, sunGroup, 0, 100);
 
 
-        
 
        /* [earth, earthTracee] = createPlanet(earthTexture, 15, 550, -10, 50)
         [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
@@ -183,11 +192,7 @@
 				var aspect = window.innerWidth / window.innerHeight;
 				perspectiveCamera.aspect = aspect;
 				perspectiveCamera.updateProjectionMatrix();
-				
-				
-				
-				
-				
+	
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				controls.handleResize();
 			}
@@ -206,7 +211,10 @@
           camera = cameraState ? cameraState : perspectiveCamera;
           //sphere.rotation.y = i * 0.01
           //args[0].rotation.y = i * 0.01
-          earth.rotation.y = i*0.01
+          //earth.rotation.y = i*0.01
+          earthGroup.rotation.y = i * 0.01
+          marsGroup.rotation.y = i * 0.015
+          jupiterGroup.rotation.y = i * 0.005
           //marsTrace.rotation.y = i * 0.02
           //mars.rotation.y = i * 0.01
           /*jupiter.rotation.y = i * 0.01*/
