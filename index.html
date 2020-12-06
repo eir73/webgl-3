@@ -27,7 +27,7 @@
       var jupiter;
       var mars;
       var sunTrace;
-      var earthTrace;
+      var earthTracee;
       var jupiterTrace
       var marsTrace;
 	
@@ -36,7 +36,7 @@
 
 			const animate = init();
 
-			animate();
+			animate(earthTracee, earth, marsTrace, mars);
 
 			function init() {
 				var aspect = window.innerWidth / window.innerHeight;
@@ -79,7 +79,7 @@
           return [sphere, group]
         }
 
-        [earth, earthTrace] = createPlanet(earthTexture, 15, 550, -10, 50)
+        [earth, earthTracee] = createPlanet(earthTexture, 15, 550, -10, 50)
         [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
         [jupiter, jupiterTrace] = createPlanet(jupiterTexture, 50, 650, 50, 650)
         [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)
@@ -145,20 +145,21 @@
 				window.addEventListener( 'resize', onWindowResize, false );
 				createControls( perspectiveCamera );
 
-        return animate = () => {
+        return (...args) => {
 				requestAnimationFrame( animate );
 				controls.update();
+        console.log(args)
         i++
         //j++
-        console.log(earth)
-        console.log(mars)
+       // console.log(earth)
+        //console.log(mars)
         i = i % 3600
 				stats.update();
 				camera = cameraState ? cameraState : perspectiveCamera;
         //sphere.rotation.y = i * 0.01
-        earthTrace.rotation.y = i * 0.01
-        earth.rotation.y = i*0.01
-        marsTrace.rotation.y = i * 0.02
+        earthTracee.rotation.y = i * 0.01
+        //earth.rotation.y = i*0.01
+        //marsTrace.rotation.y = i * 0.02
         //mars.rotation.y = i * 0.01
         /*jupiter.rotation.y = i * 0.01*/
 				renderer.render( scene, camera );
