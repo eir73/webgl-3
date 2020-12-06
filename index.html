@@ -76,13 +76,13 @@
           group.add(sphere)
           scene.add(group)
 
-          return [group, sphere]
+          return [sphere, group]
         }
 
-        [jupiterTrace, jupiter] = createPlanet(jupiterTexture, 50, 650, 50, 650)
-        [earthTrace, earth] = createPlanet(earthTexture, 15, 550, -10, 50)
-        [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)
-        [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
+        [jupiter, jupiterTrace] = createPlanet(jupiterTexture, 50, 650, 50, 650)
+        [earth, earthTrace] = createPlanet(earthTexture, 15, 550, -10, 50)
+       // [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)
+       // [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
 
 				var light = new THREE.AmbientLight( 0x666666 );
 				scene.add( light );
@@ -143,12 +143,12 @@
 			}
       var i = 0
       var j = 0
-			function animate(earth) {
+
+			function animate() {
 				requestAnimationFrame( animate );
 				controls.update();
         i++
         //j++
-        console.log(earth)
 
         i = i % 3600
 				stats.update();
