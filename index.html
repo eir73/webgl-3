@@ -18,6 +18,7 @@
 			var params = {
 				orthographicCamera: false
 			};
+      var sphere
 			var frustumSize = 400;
 			let dodecahedron;
 			let camera;
@@ -35,7 +36,8 @@
 			const cameraStateText = document.getElementById('camera-state')
 
 			init();
-			animate();
+      console.log(earth)
+			animate(earth);
 
 			function init() {
 				var aspect = window.innerWidth / window.innerHeight;
@@ -141,18 +143,19 @@
 			}
       var i = 0
       var j = 0
-			function animate() {
+			function animate(earth) {
 				requestAnimationFrame( animate );
 				controls.update();
         i++
         //j++
+        console.log(earth)
 
         i = i % 3600
 				stats.update();
 				camera = cameraState ? cameraState : perspectiveCamera;
         earth.rotation.y = i * 0.01
-        mars.rotation.y = i * 0.01
-        jupiter.rotation.y = i * 0.01
+       /* mars.rotation.y = i * 0.01
+        jupiter.rotation.y = i * 0.01*/
 				renderer.render( scene, camera );
 			}
 
