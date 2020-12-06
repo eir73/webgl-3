@@ -15,9 +15,9 @@
 			import { TrackballControls } from './three.js-master/examples/jsm/controls/TrackballControls.js';
 
 			var perspectiveCamera, orthographicCamera, controls, scene, renderer, stats;
-			var params = {
-				orthographicCamera: false
-			};
+		
+		
+		
 			var frustumSize = 400;
 		
 			let camera;
@@ -32,18 +32,17 @@
       var marsTrace;
 	
 
-			const cameraStateText = document.getElementById('camera-state')
+		
 
 			init();
 
-       animate();
+      animate();
 
 			function init() {
 				var aspect = window.innerWidth / window.innerHeight;
 				perspectiveCamera = new THREE.PerspectiveCamera( 60, aspect, 1, 10000 );
 				perspectiveCamera.position.z = 2000;
-				orthographicCamera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 1, 1000 );
-				orthographicCamera.position.z = 2000;
+			
 
 				scene = new THREE.Scene();
 				var texture = new THREE.TextureLoader().load( './textures/bg.jpg' );
@@ -61,14 +60,13 @@
         const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture})
         const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture })
         const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture })
-        let id = 0
-        function createPlanet(texture, r, x,y,z) {
+       /* function createPlanet(texture, r, x,y,z) {
           id++
-          var sphereGeometry = new THREE.SphereBufferGeometry(r, 60, 40);
-          var group = new THREE.Group({name: id})
+          let sphereGeometry = new THREE.SphereBufferGeometry(r, 60, 40);
+          let group = new THREE.Group({name: id})
           group.name = id
-          var sphereMaterial = new THREE.MeshStandardMaterial( { map: texture } );
-          var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+          let sphereMaterial = new THREE.MeshStandardMaterial( { map: texture } );
+          let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
           sphere.position.x = x;
           sphere.position.y = y;
           sphere.position.z = z;
@@ -78,12 +76,32 @@
           scene.add(group)
 
           return [sphere, group]
+        }*/
+
+        const earthGroup = new THREE.Group();
+        const earthMesh = new THREE.Mesh(geometry, earthMaterial);
+        createPlanet(scene, earthMesh, earthGroup, 31, 1);
+
+        const marsGroup = new THREE.Group();
+        const marsMesh = new THREE.Mesh(geometry, marsMaterial);
+        createPlanet(scene, marsMesh, marsGroup, 34, 0.8);
+
+        const jupiterGroup = new THREE.Group();
+        const jupiterMesh = new THREE.Mesh(geometry, jupiterMaterial);
+        createPlanet(scene, jupiterMesh, jupiterGroup, 42, 3.5);
+
+
+        function createPlanet(scene, mesh, group, x, scale) {
+          mesh.position.set(x, 0, 0);
+          mesh.scale.setScalar(scale);
+          group.add(mesh);
+          scene.add(group);
         }
 
-        [earth, earthTracee] = createPlanet(earthTexture, 15, 550, -10, 50)
+       /* [earth, earthTracee] = createPlanet(earthTexture, 15, 550, -10, 50)
         [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
         [jupiter, jupiterTrace] = createPlanet(jupiterTexture, 50, 650, 50, 650)
-        [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)
+        [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)*/
 
        /* var sphereGeometry = new THREE.SphereBufferGeometry(15, 60, 40);
           var Egroup = new THREE.Group()
@@ -146,29 +164,7 @@
 				window.addEventListener( 'resize', onWindowResize, false );
 				createControls( perspectiveCamera );
           let i = 0
-      function animate() {
-          requestAnimationFrame( animate );
-          controls.update();
-          
-          i++
-          //j++
-        // console.log(earth)
-          //console.log(mars)
-          i = i % 3600
-          stats.update();
-          camera = cameraState ? cameraState : perspectiveCamera;
-          //sphere.rotation.y = i * 0.01
-          //args[0].rotation.y = i * 0.01
-          //earth.rotation.y = i*0.01
-          //marsTrace.rotation.y = i * 0.02
-          //mars.rotation.y = i * 0.01
-          /*jupiter.rotation.y = i * 0.01*/
-          renderer.render( scene, camera );
-      }     
-
-
-			
-			}
+        }
 
 			function createControls( camera ) {
 				controls = new TrackballControls( camera, renderer.domElement );
@@ -182,59 +178,36 @@
 				var aspect = window.innerWidth / window.innerHeight;
 				perspectiveCamera.aspect = aspect;
 				perspectiveCamera.updateProjectionMatrix();
-				orthographicCamera.left = - frustumSize * aspect / 2;
-				orthographicCamera.right = frustumSize * aspect / 2;
-				orthographicCamera.top = frustumSize / 2;
-				orthographicCamera.bottom = - frustumSize / 2;
-				orthographicCamera.updateProjectionMatrix();
+				
+				
+				
+				
+				
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				controls.handleResize();
 			}
       var i = 0
       var j = 0
+      function animate() {
+          requestAnimationFrame( animate );
+          controls.update();
+          
+          i++
+          //j++
+        // console.log(earth)
+          //console.log(mars)
+          i = i % 3600
+          stats.update();
+          camera = cameraState ? cameraState : perspectiveCamera;
+          //sphere.rotation.y = i * 0.01
+          //args[0].rotation.y = i * 0.01
+          earth.rotation.y = i*0.01
+          //marsTrace.rotation.y = i * 0.02
+          //mars.rotation.y = i * 0.01
+          /*jupiter.rotation.y = i * 0.01*/
+          renderer.render( scene, camera );
+      }     
 
-			
-
-			document.onkeypress = e => {
-				let changed = false
-				let vector
-				let quaternion = new THREE.Quaternion
-				switch (e.code) {
-					case 'KeyW':
-						vector = new THREE.Vector3( 1, 0, 0 )
-						changed = true
-						break
-					case 'KeyS':
-						vector = new THREE.Vector3( -1, 0, 0 )
-						changed = true
-						break
-					case 'KeyA':
-						vector = new THREE.Vector3( 0, 1, 0 )
-						changed = true
-						break
-					case 'KeyD':
-						vector = new THREE.Vector3( 0, -1, 0 )
-						changed = true
-						break
-					case 'KeyP': 
-						cameraState = perspectiveCamera;
-						controls.dispose();
-						createControls( cameraState );
-						cameraStateText.textContent = 'perspective'
-						break;
-					case 'KeyO': 
-						cameraState = orthographicCamera;
-						controls.dispose();
-						createControls( cameraState );
-						cameraStateText.textContent = 'orthographic'
-						break;
-				}
-
-				if (changed) {
-					camera.position.applyQuaternion(quaternion.setFromAxisAngle(vector, 0.5));
-					camera.up.applyQuaternion(quaternion.setFromAxisAngle(vector, 0.5));
-				}
-			}
 		</script>
 
 	</body>
