@@ -1,184 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - trackball controls</title>
+		<title>LAB-THREE.js</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	</head>
 
 	<body>
-		<p>Current Camera state is <span id="camera-state">perspective</span></p>
 		<script type="module">
 			import * as THREE from './three.js-master/build/three.module.js';
-			import Stats from './three.js-master/examples/jsm/libs/stats.module.js';
-			import { GUI } from './three.js-master/examples/jsm/libs/dat.gui.module.js';
 			import { TrackballControls } from './three.js-master/examples/jsm/controls/TrackballControls.js';
 
-			var perspectiveCamera, orthographicCamera, controls, scene, renderer, stats;
-		
-		
-		
+			var perspectiveCamera, controls, scene, renderer, stats;
 			var frustumSize = 400;
-		
 			let camera;
-			let cameraState;
-      var sun;
-      var earth;
-      var jupiter;
-      var mars;
-      var sunTrace;
-      var earthTracee;
-      var jupiterTrace
-      var marsTrace;
-
-      var earthGroup
-      var earthMesh 
-      var marsGroup
-      var marsMesh
-      var jupiterGroup
-      var jupiterMesh 
-      var sunGroup
-      var sunMesh
+      var earthGroup, earthMesh, marsGroup, marsMesh, jupiterGroup, jupiterMesh, sunGroup, sunMesh
 	
 			init();
-
       animate();
 
 			function init() {
 				var aspect = window.innerWidth / window.innerHeight;
 				perspectiveCamera = new THREE.PerspectiveCamera( 60, aspect, 1, 10000 );
 				perspectiveCamera.position.z = 2000;
-			
 
 				scene = new THREE.Scene();
 				var texture = new THREE.TextureLoader().load( './textures/bg.jpg' );
 				scene.background = texture
 
-			
-			
-
-        const earthTexture = new THREE.TextureLoader().load( './textures/earth.jpg' );
+			  const earthTexture = new THREE.TextureLoader().load( './textures/earth.jpg' );
         const marsTexture = new THREE.TextureLoader().load( './textures/mars.jpg' );
         const sunTexture = new THREE.TextureLoader().load( './textures/sun.jpg' );
         const jupiterTexture = new THREE.TextureLoader().load( './textures/jupiter.jpg' );
-
         const sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture })
         const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture})
         const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture })
         const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture })
-        function createMyPlanet(texture, r, x,y,z) {
-          id++
-          let sphereGeometry = new THREE.SphereBufferGeometry(r, 60, 40);
-          let group = new THREE.Group({name: id})
-          group.name = id
-          let sphereMaterial = new THREE.MeshStandardMaterial( { map: texture } );
-          let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-          sphere.position.x = x;
-          sphere.position.y = y;
-          sphere.position.z = z;
-          sphere.updateMatrix();
-          sphere.matrixAutoUpdate = true
-          group.add(sphere)
-          scene.add(group)
 
-          return [sphere, group]
-        }
-
-
-        let geometry = new THREE.SphereBufferGeometry(1, 32, 16);
-
-        function createPlanet(scene, mesh, group, x, scale) {
-          mesh.position.set(x, 0, 0);
-          mesh.scale.setScalar(scale);
-          group.add(mesh);
-          scene.add(group);
-        }
+        let geometry = new THREE.SphereBufferGeometry(1, 60, 40);
 
         earthGroup = new THREE.Group();
         earthMesh = new THREE.Mesh(geometry, earthMaterial);
-        createPlanet(scene, earthMesh, earthGroup, 550, 10);
+        createPlanet(scene, earthMesh, earthGroup, 550, 15);
 
         marsGroup = new THREE.Group();
         marsMesh = new THREE.Mesh(geometry, marsMaterial);
-        createPlanet(scene, marsMesh, marsGroup, 400, 15);
+        createPlanet(scene, marsMesh, marsGroup, 400, 10);
 
         jupiterGroup = new THREE.Group();
         jupiterMesh = new THREE.Mesh(geometry, jupiterMaterial);
         createPlanet(scene, jupiterMesh, jupiterGroup, 1000, 50);
 
         sunGroup = new THREE.Group();
-        sunMesh = new THREE.Mesh(geometry, sunMaterial);
-        createPlanet(scene, sunMesh, sunGroup, 0, 100);
-
-
-
-       /* [earth, earthTracee] = createPlanet(earthTexture, 15, 550, -10, 50)
-        [sunTrace, sun] = createPlanet(sunTexture, 100, 0, 0, 0)
-        [jupiter, jupiterTrace] = createPlanet(jupiterTexture, 50, 650, 50, 650)
-        [marsTrace, mars] = createPlanet(marsTexture, 10, 400, 50, 0)*/
-
-       /* var sphereGeometry = new THREE.SphereBufferGeometry(15, 60, 40);
-          var Egroup = new THREE.Group()
-          var sphereMaterial = new THREE.MeshStandardMaterial( { map: earthTexture } );
-          var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-          sphere.position.x = 550;
-          sphere.position.y = -10;
-          sphere.position.z = 50;
-          sphere.updateMatrix();
-          sphere.matrixAutoUpdate = true
-          Egroup.add(sphere)
-          scene.add(Egroup)
-
-         sphereGeometry = new THREE.SphereBufferGeometry(10, 60, 40);
-         var Mgroup = new THREE.Group()
-         sphereMaterial = new THREE.MeshStandardMaterial( { map: marsTexture } );
-         sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-          sphere.position.x = 400;
-          sphere.position.y = 50;
-          sphere.position.z = 0;
-          sphere.updateMatrix();
-          sphere.matrixAutoUpdate = true
-          Mgroup.add(sphere)
-          scene.add(Mgroup)*/
-
+        const sunGeometry = new THREE.SphereBufferGeometry(100, 60, 40);
+        const sunMesh = new THREE.Mesh( sunGeometry, new THREE.MeshBasicMaterial( { map: sunTexture } ) )
+				const L = new THREE.PointLight( 0xffffff, 1.25, 10000 );
+				L.add( new THREE.Mesh( sunGeometry, new THREE.MeshBasicMaterial( { map: sunTexture } ) ) );
+        
+				sunGroup.add( L );
+        scene.add(sunGroup)
 
 				var light = new THREE.AmbientLight( 0x666666 );
 				scene.add( light );
+        let j = 0;
 
-        var light = new THREE.PointLight("white", 1.25);
-        light.position.set(0, 0, 0);
-        scene.add(light);  
-        createSpotlights(scene)   
-        function createSpotlights(scene) {
-          var color = 0xcccccc;
-          var intensity = 2;
-          var distance = 400;
-          var angle = Math.PI/7;
-
-          new Array(6).fill('').forEach((item, i) => {
-            var spotlight = new THREE.SpotLight(color, intensity, distance, angle);
-            var value = i % 2 === 0 ? 300 : -300;
-
-            spotlight.position.set(
-              i < 2 ? value : 0,
-              i >= 2 && i < 4 ? value : 0,
-              i >= 4 ? value : 0
-            );
-            scene.add( spotlight );
-          });
-        }
+        setInterval(() => {
+          if (j % 2) {
+            L.intensity = 0
+          } else {
+            L.intensity = 1.25
+          }
+          j++
+        }, 20000)
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
-				stats = new Stats();
-				document.body.appendChild( stats.dom );
-
 				window.addEventListener( 'resize', onWindowResize, false );
 				createControls( perspectiveCamera );
-          let i = 0
-        }
+      }
 
 			function createControls( camera ) {
 				controls = new TrackballControls( camera, renderer.domElement );
@@ -188,40 +89,35 @@
 				controls.maxDistance = 5000;
 			}
 
+      function createPlanet(scene, mesh, group, x, scale) {
+        mesh.position.set(x, 0, 0);
+        mesh.scale.setScalar(scale);
+        group.add(mesh);
+        scene.add(group);
+      }
+
 			function onWindowResize() {
 				var aspect = window.innerWidth / window.innerHeight;
 				perspectiveCamera.aspect = aspect;
 				perspectiveCamera.updateProjectionMatrix();
-	
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				controls.handleResize();
 			}
       var i = 0
-      var j = 0
       function animate() {
           requestAnimationFrame( animate );
           controls.update();
           
           i++
-          //j++
-        // console.log(earth)
-          //console.log(mars)
-          i = i % 3600
-          stats.update();
-          camera = cameraState ? cameraState : perspectiveCamera;
-          //sphere.rotation.y = i * 0.01
-          //args[0].rotation.y = i * 0.01
-          //earth.rotation.y = i*0.01
+
+          if (Math.sqrt(i) === 100000)
+            i = 0
+          
           earthGroup.rotation.y = i * 0.01
           marsGroup.rotation.y = i * 0.015
           jupiterGroup.rotation.y = i * 0.005
-          //marsTrace.rotation.y = i * 0.02
-          //mars.rotation.y = i * 0.01
-          /*jupiter.rotation.y = i * 0.01*/
-          renderer.render( scene, camera );
+          renderer.render( scene, perspectiveCamera );
       }     
-
 		</script>
-
 	</body>
 </html>
